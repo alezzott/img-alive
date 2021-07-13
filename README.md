@@ -1,17 +1,20 @@
-#                            IMG-ALIVE
+<h1 align="center">🔗IMG-ALIVE</h1>
+
+<p align="center">An application that allows you to add, share and delete images. ☕</p>
 
 
-# Technologies used
-<p align="center">
+
+<h1 align="center">  💻Technologies used </h1>
+<h2><p align="center">
     <a href="https://nodejs.org/en/">Node.js</a> |
     <a href="https://babeljs.io/">JS5</a> |
     <a href="https://reactjs.org/">React</a> |
     <a href="https://www.mongodb.com/">MongoDB</a> |
 
-</p>
+</p></h2>
 
--------
-# Dependencies Used
+
+# 📑Dependencies Used
 
 
 - [ExpressJS](http://expressjs.com/)
@@ -34,7 +37,7 @@
 
 ---
 
-# Usage
+# 📑Usage
 
 Download the project using `git clone`, open the file and do a `Yarn Start`. In case of errors, I recommend installing the dependencies.
 
@@ -44,7 +47,7 @@ Download the project using `git clone`, open the file and do a `Yarn Start`. In 
 
 ---
 
-# Use the .env using the environment variables below :
+📑 # Use the .env using the environment variables below :
 
 Case your use S3 in STORAGE_TY. Need to put the `AWS_ACCESS_KEY_ID`, 
 `AWS_SECRET_ACCESS_KEY` and `AWS_DEFAULT_REGION` after you have created your bucket in AWS !
