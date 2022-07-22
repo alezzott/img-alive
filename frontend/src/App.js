@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { uniqueId } from "lodash";
 import filesize from "filesize";
-import logo from './assets/logo.svg'
 
 import api from "./services/api";
 
@@ -13,26 +12,26 @@ import FileList from "./components/FileList";
 
 class App extends Component {
   state = {
-    uploadedFiles: []
+    uploadedFiles: [],
   };
 
   async componentDidMount() {
     const response = await api.get("posts");
 
     this.setState({
-      uploadedFiles: response.data.map(file => ({
+      uploadedFiles: response.data.map((file) => ({
         id: file._id,
         name: file.name,
         readableSize: filesize(file.size),
         preview: file.url,
         uploaded: true,
-        url: file.url
-      }))
+        url: file.url,
+      })),
     });
   }
 
-  handleUpload = files => {
-    const uploadedFiles = files.map(file => ({
+  handleUpload = (files) => {
+    const uploadedFiles = files.map((file) => ({
       file,
       id: uniqueId(),
       name: file.name,
@@ -41,11 +40,11 @@ class App extends Component {
       progress: 0,
       uploaded: false,
       error: false,
-      url: null
+      url: null,
     }));
 
     this.setState({
-      uploadedFiles: this.state.uploadedFiles.concat(uploadedFiles)
+      uploadedFiles: this.state.uploadedFiles.concat(uploadedFiles),
     });
 
     uploadedFiles.forEach(this.processUpload);
@@ -53,69 +52,73 @@ class App extends Component {
 
   updateFile = (id, data) => {
     this.setState({
-      uploadedFiles: this.state.uploadedFiles.map(uploadedFile => {
+      uploadedFiles: this.state.uploadedFiles.map((uploadedFile) => {
         return id === uploadedFile.id
           ? { ...uploadedFile, ...data }
           : uploadedFile;
-      })
+      }),
     });
   };
 
-  processUpload = uploadedFile => {
+  processUpload = (uploadedFile) => {
     const data = new FormData();
 
     data.append("file", uploadedFile.file, uploadedFile.name);
 
     api
       .post("posts", data, {
-        onUploadProgress: e => {
+        onUploadProgress: (e) => {
           const progress = parseInt(Math.round((e.loaded * 100) / e.total));
 
           this.updateFile(uploadedFile.id, {
-            progress
+            progress,
           });
-        }
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.updateFile(uploadedFile.id, {
           uploaded: true,
           id: response.data._id,
-          url: response.data.url
+          url: response.data.url,
         });
       })
       .catch(() => {
         this.updateFile(uploadedFile.id, {
-          error: true
+          error: true,
         });
       });
   };
 
-  handleDelete = async id => {
+  handleDelete = async (id) => {
     await api.delete(`posts/${id}`);
 
     this.setState({
-      uploadedFiles: this.state.uploadedFiles.filter(file => file.id !== id)
+      uploadedFiles: this.state.uploadedFiles.filter((file) => file.id !== id),
     });
   };
 
   componentWillUnmount() {
-    this.state.uploadedFiles.forEach(file => URL.revokeObjectURL(file.preview));
+    this.state.uploadedFiles.forEach((file) =>
+      URL.revokeObjectURL(file.preview)
+    );
   }
 
   render() {
     const { uploadedFiles } = this.state;
 
     return (
-      <Container>
-        <Content>
-        <img src={logo} alt="Alive"/>
-          <Upload onUpload={this.handleUpload} />
-          {!!uploadedFiles.length && (
-            <FileList files={uploadedFiles} onDelete={this.handleDelete} />
-          )}
-        </Content>
-        <GlobalStyle />
-      </Container>
+      <>
+        <div className="logo">Upload de imagens</div>
+        <Container>
+          <Content className="container">
+            <Upload onUpload={this.handleUpload} />
+            {!!uploadedFiles.length && (
+              <FileList files={uploadedFiles} onDelete={this.handleDelete} />
+            )}
+          </Content>
+          <GlobalStyle />
+        </Container>
+      </>
     );
   }
 }
